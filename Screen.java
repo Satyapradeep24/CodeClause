@@ -1,6 +1,5 @@
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
 
 public class Screen {
     private String movieName;
@@ -18,20 +17,27 @@ public class Screen {
     }
 
     public void bookSeat() {
-        System.out.println("\nAvailable time slots for " + movieName + ": " + Arrays.toString(timeSlots));
-        System.out.println("Enter time slot (e.g., '10:00 AM'): ");
-        String slot = MovieBookingSystem.scanner.nextLine();
+        System.out.println("\nAvailable time slots for " + movieName + ":");
+        for (int i = 0; i < timeSlots.length; i++) {
+            System.out.println((i + 1) + ". " + timeSlots[i]);
+        }
 
-        if (!Arrays.asList(timeSlots).contains(slot)) {
-            System.out.println("Invalid time slot!");
+        System.out.println("Enter the serial number of your preferred time slot (1-3): ");
+        int slotIndex = MovieBookingSystem.scanner.nextInt();
+        MovieBookingSystem.scanner.nextLine(); // Consume newline
+
+        if (slotIndex < 1 || slotIndex > 3) {
+            System.out.println("Invalid selection!");
             return;
         }
 
-        if (!bookings.containsKey(slot)) {
-            bookings.put(slot, new Booking(slot));
+        String selectedSlot = timeSlots[slotIndex - 1];
+
+        if (!bookings.containsKey(selectedSlot)) {
+            bookings.put(selectedSlot, new Booking(selectedSlot));
         }
 
-        bookings.get(slot).bookSeat();
+        bookings.get(selectedSlot).bookSeat();
     }
 
     public void viewBookings() {
@@ -42,14 +48,27 @@ public class Screen {
     }
 
     public void cancelBooking() {
-        System.out.println("\nEnter time slot (e.g., '10:00 AM') to cancel booking: ");
-        String slot = MovieBookingSystem.scanner.nextLine();
+        System.out.println("\nAvailable time slots for " + movieName + ":");
+        for (int i = 0; i < timeSlots.length; i++) {
+            System.out.println((i + 1) + ". " + timeSlots[i]);
+        }
 
-        if (!bookings.containsKey(slot)) {
+        System.out.println("Enter the serial number of the time slot to cancel booking (1-3): ");
+        int slotIndex = MovieBookingSystem.scanner.nextInt();
+        MovieBookingSystem.scanner.nextLine(); // Consume newline
+
+        if (slotIndex < 1 || slotIndex > 3) {
+            System.out.println("Invalid selection!");
+            return;
+        }
+
+        String selectedSlot = timeSlots[slotIndex - 1];
+
+        if (!bookings.containsKey(selectedSlot)) {
             System.out.println("No bookings found for this time slot!");
             return;
         }
 
-        bookings.get(slot).cancelSeat();
+        bookings.get(selectedSlot).cancelSeat();
     }
 }

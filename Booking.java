@@ -3,7 +3,7 @@ import java.util.List;
 
 public class Booking {
     private String timeSlot;
-    private List<Integer> bookedSeats;
+    private List<String> bookedSeats;
 
     public Booking(String timeSlot) {
         this.timeSlot = timeSlot;
@@ -17,11 +17,10 @@ public class Booking {
             return;
         }
 
-        System.out.println("Enter seat number (1-100): ");
-        int seat = MovieBookingSystem.scanner.nextInt();
-        MovieBookingSystem.scanner.nextLine(); // Consume newline
+        System.out.println("Enter seat row (A-E) and number (1-20) (e.g., A5, C10): ");
+        String seat = MovieBookingSystem.scanner.nextLine().toUpperCase();
 
-        if (seat < 1 || seat > 100 || bookedSeats.contains(seat)) {
+        if (!seat.matches("[A-E](1[0-9]|20|[1-9])") || bookedSeats.contains(seat)) {
             System.out.println("Invalid or already booked seat!");
             return;
         }
@@ -34,21 +33,34 @@ public class Booking {
         if (bookedSeats.isEmpty()) {
             System.out.println("No bookings for " + timeSlot);
         } else {
-            System.out.println(timeSlot + " - Booked Seats: " + bookedSeats);
+            System.out.println(timeSlot + " - Booked Seats:");
+            for (int i = 0; i < bookedSeats.size(); i++) {
+                System.out.println((i + 1) + ". " + bookedSeats.get(i));
+            }
         }
     }
 
     public void cancelSeat() {
-        System.out.println("Enter seat number to cancel: ");
-        int seat = MovieBookingSystem.scanner.nextInt();
-        MovieBookingSystem.scanner.nextLine(); // Consume newline
-
-        if (!bookedSeats.contains(seat)) {
-            System.out.println("No booking found for seat " + seat);
+        if (bookedSeats.isEmpty()) {
+            System.out.println("No bookings available to cancel.");
             return;
         }
 
-        bookedSeats.remove((Integer) seat);
-        System.out.println("Seat " + seat + " cancelled for " + timeSlot);
+        System.out.println("\nYour booked seats for " + timeSlot + ":");
+        for (int i = 0; i < bookedSeats.size(); i++) {
+            System.out.println((i + 1) + ". " + bookedSeats.get(i));
+        }
+
+        System.out.println("Enter the serial number of the ticket to cancel: ");
+        int seatIndex = MovieBookingSystem.scanner.nextInt();
+        MovieBookingSystem.scanner.nextLine(); // Consume newline
+
+        if (seatIndex < 1 || seatIndex > bookedSeats.size()) {
+            System.out.println("Invalid selection!");
+            return;
+        }
+
+        String removedSeat = bookedSeats.remove(seatIndex - 1);
+        System.out.println("Seat " + removedSeat + " has been canceled successfully.");
     }
 }
